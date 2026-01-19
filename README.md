@@ -1,32 +1,58 @@
 Snapdragon 8 Elite HIL Simulator & Validation Suite
+
 📱 Project Overview
+
 This project is a Hardware-in-the-Loop (HIL) Simulator for the Snapdragon 8 Elite (Gen 5) System-on-a-Chip (SoC). It simulates real-time hardware telemetry, including 8-core cluster dynamics, thermal throttling behaviors, and Power Management IC (PMIC) safety protocols.
 
-The system is designed with a Dual-Layer Validation Architecture, ensuring that both the hardware logic (Backend API) and the monitoring interface (Frontend UI) operate within safety parameters.
+The system is designed with a Dual-Layer Validation Architecture, ensuring that both the hardware logic (Backend API) and the monitoring interface (Frontend UI) operate within strict safety parameters.
 
 🛠 Tech Stack
-Backend/Simulator: FastAPI (Python) - Handles physics-based telemetry and state machine logic.
 
-Frontend Dashboard: HTML5, CSS3 (Tailwind-inspired), JavaScript (ES6) - Real-time data visualization.
+Backend/Simulator: FastAPI (Python) – Handles physics-based telemetry and state machine logic.
+
+Frontend Dashboard: HTML5, CSS3 (Tailwind-inspired), JavaScript (ES6) – Real-time data visualization.
 
 Automated Testing: * Pytest: API logic and hardware state validation.
 
 Playwright: E2E UI testing and responsive layout verification.
 
 🚀 Key Engineering Features
-8-Core Cluster Modeling: Simulates 2x Prime Cores (Oryon) up to 4.32 GHz and 6x Performance Cores.
 
-Thermal Throttling (Safety Governor): Logic-driven clock speed capping when the SoC exceeds 85°C, featuring recovery hysteresis.
+1. 8-Core Cluster Modeling
 
-PMIC Battery Override: Automatic transition to "Battery Saver" and "Ultra Saver" modes based on critical battery thresholds (20% and 5%).
+Simulates the advanced architecture of the Snapdragon 8 Elite:
 
-Real-time Telemetry: 1Hz heartbeat sync between the hardware state machine and the dashboard.
+2x Prime Cores (Oryon): Scaling up to 4.32 GHz for peak workloads.
+
+6x Performance Cores: Efficiently handling multi-threaded background processes.
+
+2. Thermal Throttling (Safety Governor)
+
+Logic-driven clock speed capping designed to protect hardware integrity:
+
+Triggers when SoC temperature exceeds 85°C.
+
+Features recovery hysteresis to prevent "frequency oscillation" during cooling phases.
+
+3. PMIC Battery Override
+
+Automatic power state transitions based on critical thresholds:
+
+Battery Saver: Triggered at 20% capacity.
+
+Ultra Saver: Triggered at 5% capacity (Disables Prime cores, caps performance cores).
+
+4. Real-time Telemetry
+
+A constant 1Hz heartbeat synchronizes the hardware state machine with the dashboard, providing high-fidelity monitoring of voltage, clock speed, and thermals.
 
 🧪 Automated Testing Suite (Regression Rig)
+
 The project includes a robust regression suite to ensure system stability during software updates.
 
-1. Backend Logic Tests (Pytest)
-Located in tests/test_backend.py. Validates:
+1. Backend Logic Tests (pytest)
+
+Path: tests/test_backend.py
 
 Telemetry Integrity: Ensures correct JSON structure and core counts.
 
@@ -34,45 +60,49 @@ Physics Accuracy: Verifies clock speed boosts in High-Performance mode.
 
 Safety Rejection: Confirms the API rejects unsafe power requests when battery is low.
 
-2. UI/UX Automation (Playwright)
-Located in tests/test_ui.py. Validates:
+2. UI/UX Automation (playwright)
 
-Responsive Layout: Grid alignment on Mobile, Tablet, and Desktop.
+Path: tests/test_ui.py
 
-Visual Alerts: Verification of red "Throttling" alerts and CSS animations.
+Responsive Layout: Grid alignment verification on Mobile, Tablet, and Desktop breakpoints.
 
-E2E Safety Flow: Automated verification of the PMIC auto-override in the browser.
+Visual Alerts: Verification of red "Throttling" alerts and CSS state animations.
+
+E2E Safety Flow: Automated verification of the PMIC auto-override reflected in the browser DOM.
 
 🚦 Getting Started
+
 Prerequisites
+
 Python 3.9+
 
-Node.js (for Playwright browsers)
+Node.js (for Playwright browser binaries)
 
 Installation
-Clone the repo:
 
-Bash
+Clone the repo:
 
 git clone https://github.com/akhilakhil2/snapdragon-8-elite-hil-simulator.git
 cd snapdragon-8-elite-hil-simulator
-Install dependencies:
 
-Bash
+
+Install dependencies:
 
 pip install -r requirements.txt
 playwright install chromium
+
+
 Running the Simulator
-Bash
 
 uvicorn main:app --reload
-Navigate to http://127.0.0.1:8000 to view the dashboard.
+
+
+Navigate to http://127.0.0.1:8000 to view the interactive dashboard.
 
 Running the Test Rig
-Bash
 
-# Run all tests (Headless)
+# Run all tests (Headless mode)
 pytest -v
 
-# Run UI tests with slow-mo for debugging
+# Run UI tests with slow-mo for debugging/inspection
 pytest --headed --slowmo 500 tests/test_ui.py
